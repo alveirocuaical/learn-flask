@@ -1,29 +1,17 @@
 from crypt import methods
 import unittest
-from flask import Flask, flash, redirect, request, make_response, render_template, session, url_for
-from flask_bootstrap import Bootstrap
-from flask_wtf import FlaskForm
-from wtforms import StringField
-from wtforms import SubmitField
-from wtforms import PasswordField
-from wtforms import BooleanField
-from wtforms.validators import DataRequired
+from flask import flash, redirect, request, make_response, render_template, session, url_for
 from flask import flash
+from app import create_app
+from app.forms import LoginForm
 
 
-app = Flask(__name__)
-bootstrap = Bootstrap(app)
+app = create_app()
 
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 
 todos = ['Comprar Cafe', 'Enviar correo', 'Entregar documentos']
 
 
-class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Sign In')
 
 
 @app.cli.command()
