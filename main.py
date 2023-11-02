@@ -1,16 +1,14 @@
-from crypt import methods
+
 import unittest
-from flask import flash, redirect, request, make_response, render_template, session, url_for
-from flask import flash
+from flask import redirect, request, make_response, render_template, session
+from flask_login import login_required
 from app import create_app
-from app.forms import LoginForm
 
 
 app = create_app()
 
 
 todos = ['Comprar Cafe', 'Enviar correo', 'Entregar documentos']
-
 
 
 
@@ -41,14 +39,14 @@ def index():
 
 
 @app.route('/hello')
+@login_required
 def hello():
-    user_ip = session.get('user_ip')    
+    user_ip = session.get('user_ip')
     username = session.get('username')
     context = {
         'user_ip': user_ip,
-        'todos': todos,        
+        'todos': todos,
         'username': username
     }
-    
 
     return render_template('hello.html', **context)
