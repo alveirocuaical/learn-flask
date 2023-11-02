@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ super() }}
+    500
+{% endblock title %}
+
+
+{% block content %}
+    <h1>Inernal server error</h1>
+    <p>{{ error }}</p>
+{% endblock content %}
