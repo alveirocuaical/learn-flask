@@ -1,16 +1,17 @@
 
 import unittest
-from flask import redirect, request, make_response, render_template, session
-from flask_login import login_required
+from flask import flash, redirect, request, make_response, render_template, session, url_for
+from flask_login import current_user, login_required
 from app import create_app
+from flask_sqlalchemy import SQLAlchemy
+
+from app.forms import DeleleTodoForm, TodoForm
+from app.models import TodoData
+from app.pgsql_service import get_all, create_todo, delete_todo
+from flask_login import current_user
 
 
 app = create_app()
-
-
-todos = ['Comprar Cafe', 'Enviar correo', 'Entregar documentos']
-
-
 
 @app.cli.command()
 def test():
@@ -38,15 +39,39 @@ def index():
     return response
 
 
-@app.route('/hello')
+@app.route('/hello', methods=['GET', 'POST'])
 @login_required
 def hello():
     user_ip = session.get('user_ip')
-    username = session.get('username')
+    username = current_user.id
+    todo_form = TodoForm()
+    delete_todo = DeleleTodoForm()
+    
+    if todo_form.validate_on_submit():
+        description = todo_form.description.data
+        user_id = username
+        
+        todo_data = TodoData(description, user_id)
+        
+        todos = create_todo(todo_data)
+        
+        flash('Todo created successfull')
+        return redirect(url_for('hello'))
+        
+    
+    
     context = {
         'user_ip': user_ip,
-        'todos': todos,
-        'username': username
+        'todos': get_all(username),
+        'username': username,
+        'todo_form': todo_form,
+        'delete_todo' : delete_todo
     }
 
     return render_template('hello.html', **context)
+
+@app.route('/delete/<todo_id>', methods=['POST'])
+def delete(todo_id):
+    delete_todo(todo_id)
+    flash('Todo deleted')
+    return redirect(url_for('hello'))

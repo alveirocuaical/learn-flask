@@ -18,8 +18,12 @@
         <ul class="nav navbar-nav">
           <li class="active"><a href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a></li>
           <li><a href="{{ url_for('hello') }}">Hello</a></li>
-          <li><a href="{{ url_for('auth.login') }}">login</a></li>
-          
+          <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+          {% if current_user.is_authenticated %}          
+            <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+          {% else %}
+            <li><a href="{{ url_for('auth.singup') }}">Singup</a></li>          
+          {% endif %}
         </ul>
         
       </div><!-- /.navbar-collapse -->

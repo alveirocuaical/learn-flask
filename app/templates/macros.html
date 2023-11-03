@@ -1,3 +1,10 @@
-{% macro render_todo(todo) %}
-    <li class="list-group-item">Descripcion: {{ todo }}</li>
+{% import 'bootstrap/wtf.html' as wtf %}
+
+
+{% macro render_todo(todo, delete_todo) %}
+    <li class="list-group-item">Descripcion: {{ todo.description }} &nbsp; Status: {{ todo.status }}
+
+        {{ wtf.quick_form(delete_todo, action=url_for('delete', todo_id=todo.id)) }}
+
+    </li>
 {% endmacro %}
